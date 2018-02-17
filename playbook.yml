@@ -1,0 +1,5 @@
+---
+- name: insatll apache for HTML pages Only
+  hosts: client
+  roles:
+   - apache

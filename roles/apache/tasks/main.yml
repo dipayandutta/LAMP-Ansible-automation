@@ -1,0 +1,32 @@
+- name: Update Cache
+  apt:
+   update_cache: yes
+   
+- name: install apache server 
+  apt: name=apache2 state=installed
+
+- name: Add PPA repository
+  apt_repository:
+   repo: ppa:ondrej/php
+   update_cache: true
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install php7.0
+  apt: name={{ item }} state=installed
+  with_items:
+   - php7.0
+   - libapache2-mod-php7.0
+   - php7.0-xml
+   - php7.0-gd
+   - php7.0-json
+   - php7.0-fpm
+   - php7.0-cli
+
+- name: copy files to the document root 
+  copy: src=mario.png dest=/var/www/html/mario.png
+
+- name: copy application code 
+  template: src=example.php.j2 dest=/var/www/html/example.php
+
+  notify: restart-apache
+  
